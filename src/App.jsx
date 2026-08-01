@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 import { Banner } from "./componentes/Banner";
 import { CardEvento } from "./componentes/CardEvento";
@@ -5,14 +6,12 @@ import { FormularioDeEvento } from "./componentes/FormularioDeEvento";
 import { Tema } from "./componentes/Tema";
 
 // no react, componetes são FUNÇÕES
-// props é um OBJETO
-// props.children
 
 function App() {
   const temas = [
     {
       id: 1,
-      nome: "fron-end",
+      nome: "front-end",
     },
     {
       id: 2,
@@ -36,26 +35,36 @@ function App() {
     },
   ];
 
-  const eventos = [
-    {
+  const [eventos, setEventos] = useState ([
+     {
       capa: 'https://raw.githubusercontent.com/viniciosneves/tecboard-assets/refs/heads/main/imagem_1.png',
       tema: temas[0],
       data: new Date(),
-      titulo: 'Mulhers no front'
+      titulo: 'Mulheres no front'
     }
-  ]
+  ])
+
+  function adicionarEvento(evento){
+    //eventos.push(evento)
+    //console.log('eventos => ', eventos)
+    setEventos([...eventos, evento])
+  }
   return (
     <main>
       <header>
         <img src="/logo.png" alt="" />
       </header>
       <Banner />
-      <FormularioDeEvento />
-      {temas.map(function (item) {
+      <FormularioDeEvento  
+      temas={temas} aoSubmeter={adicionarEvento} />
+      {temas.map(function(item) {
         return (
           <section key={item.id}>
             <Tema tema={item} />
-            <CardEvento evento={eventos[0]}/>
+            {eventos.map(function (item, indice) {
+
+            return <CardEvento evento={item} key={indice} />
+            })}
           </section>
         );
       })}

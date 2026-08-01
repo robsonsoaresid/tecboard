@@ -3,12 +3,26 @@ import { CampoDeEntrada } from "../CampoDeEntrada";
 import { CampoDeFormulario } from "../CampoDeFormulario";
 import { Label } from "../Label";
 import { TituloFormulario } from "../TituloFormulario";
-import { ListaSuspensa }  from "../ListaSuspensa";
+import { ListaSuspensa } from "../ListaSuspensa";
 import { Botao } from "../Botao";
 
-export function FormularioDeEvento() {
+export function FormularioDeEvento({ temas, aoSubmeter }) {
+
+  function aoFormSubmetido(formData) {
+    console.log("opa, tá na hora de criar um novo evento", formData);
+    const evento = {
+      capa: formData.get("capa"),
+      tema: temas.find(function (item) {
+        return item.id == formData.get("tema");
+      }),
+      data: new Date(formData.get("dataEvento")),
+      titulo: formData.get("nomeEvento"),
+    };
+    aoSubmeter(evento);
+  }
+
   return (
-    <form className="form-evento">
+    <form className="form-evento" action={aoFormSubmetido}>
       <TituloFormulario>Preecha para criar um evnento:</TituloFormulario>
       <div className="campos">
         <CampoDeFormulario>
@@ -21,29 +35,25 @@ export function FormularioDeEvento() {
           />
         </CampoDeFormulario>
         <CampoDeFormulario>
-          <Label htmlFor="dataEvento">Data do evento</Label>
+          <Label htmlFor="capa">Qual o nome do evnento?</Label>
           <CampoDeEntrada
-            type="date"
-            id="dataEvento"
-           
-            name="dataEvento"
+            type="text"
+            id="capa"
+            placeholder="https://..."
+            name="capa"
           />
         </CampoDeFormulario>
         <CampoDeFormulario>
-          <Label htmlFor="htmlFor">Tema do evento</Label>
-          <ListaSuspensa 
-          name="tema" 
-          id="tema" 
-          defaultValue=""> 
-          <option value="" disabled>Selecione uma opção</option> 
-          </ListaSuspensa> 
+          <Label htmlFor="dataEvento">Data do evento</Label>
+          <CampoDeEntrada type="date" id="dataEvento" name="dataEvento" />
         </CampoDeFormulario>
-        
+        <CampoDeFormulario>
+          <Label htmlFor="tema">Tema do evento</Label>
+          <ListaSuspensa name="tema" id="tema" itens={temas} />
+        </CampoDeFormulario>
       </div>
-      <div  className='acoes'>
-        <Botao>
-          Criar evento
-        </Botao>
+      <div className="acoes">
+        <Botao>Criar evento</Botao>
       </div>
     </form>
   );
