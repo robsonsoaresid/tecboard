@@ -35,39 +35,53 @@ function App() {
     },
   ];
 
-  const [eventos, setEventos] = useState ([
-     {
-      capa: 'https://raw.githubusercontent.com/viniciosneves/tecboard-assets/refs/heads/main/imagem_1.png',
+  const [eventos, setEventos] = useState([
+    {
+      capa: "https://raw.githubusercontent.com/viniciosneves/tecboard-assets/refs/heads/main/imagem_1.png",
       tema: temas[0],
       data: new Date(),
-      titulo: 'Mulheres no front'
-    }
-  ])
+      titulo: "Mulheres no front",
+    },
+  ]);
 
-  function adicionarEvento(evento){
+  function adicionarEvento(evento) {
     //eventos.push(evento)
     //console.log('eventos => ', eventos)
-    setEventos([...eventos, evento])
+    setEventos([...eventos, evento]);
   }
+  // redenrização condicional usando &&
   return (
     <main>
       <header>
         <img src="/logo.png" alt="" />
       </header>
       <Banner />
-      <FormularioDeEvento  
-      temas={temas} aoSubmeter={adicionarEvento} />
-      {temas.map(function(item) {
-        return (
-          <section key={item.id}>
-            <Tema tema={item} />
-            {eventos.map(function (item, indice) {
+      <FormularioDeEvento temas={temas} aoSubmeter={adicionarEvento} />
 
-            return <CardEvento evento={item} key={indice} />
+      <section className="container">
+        {temas.map(function (tema) {
+          if (!eventos.some(function(evento){
+            return evento.tema.id == tema.id
+          })) {
+            return null
+          }
+        return (
+          <section key={tema.id}>
+            <Tema tema={tema} />
+            <div className="eventos">
+            {eventos.filter(function (evento) {
+              return evento.tema.id == tema.id
+            })
+            .map(function (evento, indice) {
+              return <CardEvento evento={evento} key={indice} />;
             })}
+            </div>
           </section>
         );
       })}
+      </section>
+
+      
 
       {/*<section>
         <Tema tema={temas[1]} />
